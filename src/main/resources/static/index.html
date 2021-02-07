@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>H2 Library</title>
+</head>
+
+<body>
+    <div class="container">
+
+        <b><a href="http://localhost:8080/h2-console/" target="blank">Go to h2-console</a> &nbsp;&nbsp;&nbsp;(JDBC URL:  jdbc:h2:mem:test, User Name: sa, Password: "")</b>
+        <div class="items-list">
+            <div class="book-result"> <h2> Books </h2> </div>
+            <div class="user-result"> <h2> Users </h2></div>
+
+        </div>
+        <div class="items-list">
+            <div class="book-result">
+                <div class="button-container">
+                    <div class="button add-books-button" onclick="addRandomBooks()">Add books</div>
+                    <div class="button list-button" onclick="getBooks()">Show books</div>
+                    <div class="button list-button" onclick="removeAllBooks()">Remove all books</div>
+                </div>
+            </div>
+            <div class="user-result">
+                <div class="button-container">
+                    <div class="button add-User-button" onclick="addRandomUsers()">Add users</div>
+                    <div class="button list-button" onclick="getUsers()">Show users</div>
+                    <div class="button list-button" onclick="removeAllUsers()">Remove all users</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="items-list">
+            <div class="button" onclick="processTakeForm()">Take a book</div>
+
+            <div class="input">
+                <div><b>Book id:</b></div>
+                <div class="bookId" contenteditable="true">12</div>
+            </div>
+            <div class="input">
+                <div><b>User id:</b></div>
+                <div class="userId" contenteditable="true">26</div>
+            </div>
+            <div class="button" onclick="processRetForm()">Return book</div>
+        </div>
+
+
+
+
+
+
+        <h2>BookController</h2>
+        <a href="http://localhost:8080//book/add"> @PostMapping("/book/add")</a></br>
+        <a href="http://localhost:8080//book/update"> @PostMapping("/book/update")</a></br>
+        <a href="http://localhost:8080//book/remove"> @PostMapping("/book/remove")</a></br>
+        <a href="http://localhost:8080//book/getbyid"> @PostMapping("/book/getbyid")</a></br>
+        <a href="http://localhost:8080//book/getall"> @GetMapping("/book/getall")</a></br>
+        <a href="http://localhost:8080//book/test"> @GetMapping("/book/test")</a></br>
+        @PostMapping("/book/remall")
+
+        <h2>UserController</h2>
+        <a href="http://localhost:8080//user/add"> @PostMapping("/user/add")</a></br>
+        <a href="http://localhost:8080//user/update"> @PostMapping("/user/update")</a></br>
+        <a href="http://localhost:8080//user/remove"> @PostMapping("/user/remove")</a></br>
+        <a href="http://localhost:8080//user/getbyid"> @PostMapping("/user/getbyid")</a></br>
+        <a href="http://localhost:8080//user/getall"> @GetMapping("/user/getall")</a></br>
+        <a href="http://localhost:8080//user/test"> @GetMapping("/user/test")</a></br>
+        @PostMapping("/user/remAll")
+
+        <h2>ActionController</h2>
+        <a href="http://localhost:8080//action/take"> @PostMapping("/action/take")</a></br>
+        <a href="http://localhost:8080//action/return"> @PostMapping("/action/return")</a></br>
+        <a href="http://localhost:8080//action/test"> @GetMapping("/action/test")</a></br>
+
+    </div>
+</body>
+
+<script src="rand.js"></script>
+<script src="initiateData.js"></script>
+<script src="script.js"></script>
+
+</html>
