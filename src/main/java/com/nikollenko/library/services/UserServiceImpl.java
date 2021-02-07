@@ -3,6 +3,8 @@ package com.nikollenko.library.services;
 import com.nikollenko.library.dao.UserRepository;
 import com.nikollenko.library.model.Book;
 import com.nikollenko.library.model.User;
+import com.nikollenko.library.services.exception.NoSuchBookException;
+import com.nikollenko.library.services.exception.NoSuchUserException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,14 +35,20 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public User updateUser(long id, User user) throws NoSuchElementException {
-        userRepository.findById(id);
+    public User updateUser(long id, User user) throws NoSuchUserException {
+        if (!userRepository.existsById(id)) {
+            throw new NoSuchUserException(id);
+        }
         return userRepository.save(user);
     }
 
     @Override
     @Transactional
-    public boolean removeUser(long id) {
+    public boolean removeUser(long id) throws NoSuchUserException {
+        User user = userRepository.findById(id).orElseThrow(()->new NoSuchUserException(id));
+        if(!user.getBooks().isEmpty()){
+            return false;
+        }
         if (userRepository.existsById(id)) {
             userRepository.deleteById(id);
             return true;
@@ -50,8 +58,24 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public User getUserById(long id) throws NoSuchElementException {
-        return userRepository.findById(id).orElse(new User());
+    public boolean removeAll(){
+        int i=0;
+        List<User> users =  getAllUsers();
+        for (User user :
+                users) {
+            try {
+                removeUser(user.getId());
+            }catch(NoSuchUserException e){
+                i++;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    @Transactional
+    public User getUserById(long id) throws NoSuchUserException {
+        return userRepository.findById(id).orElseThrow(()->new NoSuchUserException(id));
     }
 
     @Override
@@ -62,34 +86,23 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public boolean takeBook(long userId, long bookId) {
-        if (!bookService.setByzy(bookId)) {
+    public boolean takeBook(long userId, long bookId) throws NoSuchBookException, NoSuchUserException {
+        User user = getUserById(userId);
+        Book book = bookService.getBookById(bookId);
+        if (!bookService.setBuzy(bookId)) {
             return false;
         }
-        try {
-            User user = getUserById(userId);
-            Book book = bookService.getBookById(bookId);
-            if (user.takeBook(book)) {
-                return true;
-            }
-            return false;
-        } catch (NoSuchElementException e) {
-            return false;
-        }
+        return user.takeBook(book);
     }
 
     @Override
     @Transactional
-    public boolean returnBook(long clientId, long bookId) {
-       if(! bookService.setFree(bookId)){
-           return false;
-       }
-        try {
-            User user = getUserById(clientId);
-            Book book = bookService.getBookById(bookId);
-            return user.returnBook(book);
-        } catch (NoSuchElementException e) {
+    public boolean returnBook(long clientId, long bookId) throws NoSuchBookException, NoSuchUserException {
+        if (!bookService.setFree(bookId)) {
             return false;
         }
+        User user = getUserById(clientId);
+        Book book = bookService.getBookById(bookId);
+        return user.returnBook(book);
     }
 }

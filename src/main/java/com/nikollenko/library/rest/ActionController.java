@@ -2,6 +2,8 @@ package com.nikollenko.library.rest;
 
 import com.nikollenko.library.services.BookService;
 import com.nikollenko.library.services.UserService;
+import com.nikollenko.library.services.exception.NoSuchBookException;
+import com.nikollenko.library.services.exception.NoSuchUserException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,23 +26,27 @@ public class ActionController {
 
     @PostMapping("/action/take")
     public String takeBook(@RequestParam int userId, @RequestParam int bookId) {
-        if (userService.takeBook(userId, bookId)) {
-            return userService.getUserById(userId).toString() + " take " +  bookService.getBookById(bookId).toString();
+            try {
+                userService.takeBook(userId, bookId);
+                return "Book teken ";
+            }catch(NoSuchBookException | NoSuchUserException e) {
+                return e.getMessage();
+            }
         }
-        return "Not successful. Book is already taken or such User or Book are not exist.";
-    }
 
     @PostMapping("/action/return")
-    public String returnBook( @RequestParam int bookId, @RequestParam int userId) {
-        if (userService.returnBook(userId, bookId)) {
-            return userService.getUserById(userId).toString() + " returned "+ bookService.getBookById(bookId).toString();
+    public String returnBook(@RequestParam int bookId, @RequestParam int userId) {
+        try {
+            userService.returnBook(userId, bookId);
+            return "Return operation is successful.";
+        }catch(NoSuchBookException | NoSuchUserException e) {
+            return e.getMessage();
         }
-        return  "Return operation is not successful. User or book is faulty.";
     }
 
     @PostMapping("/action/test")
     public String actionTest(@RequestParam int bookId, @RequestParam int userId) {
-        return "Test mapping. Successful." + bookId + " " +userId;
+        return "Test mapping. Successful." + bookId + " " + userId;
     }
 
 }
