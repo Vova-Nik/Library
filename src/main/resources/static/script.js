@@ -47,7 +47,7 @@ function showBooks() {
         let bookBysy = document.createElement('div');
         bookstr.appendChild(bookBysy);
 
-        if (el.busy == true) {
+        if (el.busy) {
             bookBysy.innerHTML = "Busy";
             bookBysy.setAttribute('class', 'busy');
         }
@@ -160,7 +160,7 @@ async function processTakeForm() {
 
     });
     let ans = await response.text();
-    if (ans.includes("ot successful"))
+    if (ans.includes("not exist"))
         alert(ans);
     getBooks();
     getUsers();
@@ -184,7 +184,7 @@ async function processRetForm() {
 
     });
     let ans = await response.text();
-    if (ans.includes("ot successful"))
+    if (ans.includes("not exist"))
         alert(ans);
     getBooks();
     getUsers();

@@ -3,6 +3,7 @@ package com.nikollenko.library.rest;
 import com.nikollenko.library.model.Book;
 import com.nikollenko.library.services.BookService;
 
+import com.nikollenko.library.services.exception.NoSuchBookException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,7 +31,11 @@ public class BookController {
 
     @GetMapping("/book/getbyid")
     public Book getbyid(@RequestParam int id) {
-        return  bookService.getBookById(id);
+        try {
+            return bookService.getBookById(id);
+        }catch(NoSuchBookException e){
+            return new Book();
+        }
     }
 
     @GetMapping("/book/getall")
@@ -40,17 +45,17 @@ public class BookController {
 
     @DeleteMapping("/book/remove")
     public String remove(@RequestParam int id) {
-        bookService.removeBook(id);
-        return "Deleted ";
+        try {
+            bookService.removeBook(id);
+            return "Deleted ";
+        }catch(NoSuchBookException e) {
+            return e.getMessage();
+        }
     }
 
     @DeleteMapping("/book/remall")
     public String removeAll() {
-        List<Book> books = bookService.getAllBook();
-        for (Book book: books
-        ) {
-            bookService.removeBook(book.getId());
-        }
+        bookService.removeAllFree();
         return "Deleted All Books";
     }
 

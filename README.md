@@ -1,3 +1,5 @@
+# LibraryTask
+
 Test task
 Create a RESTful Spring Boot application that will represent a simple "Library" system with two main entities - User and Book. A user can have many books and a book can only belong to 1 user. A book can be free (allowed to be taken by other users) or taken (not allowed to be taken by other users)
 
@@ -12,8 +14,8 @@ No UI is needed.
 Use any ORM you like
 
 ******************************************************************************************
-UI - just for testing 	src\main\resources\static\index.html
-							localhost:8080/index
+**UI - just for testing 	   src\main\resources\static\index.html**       
+                                **localhost:8080/index.html**
 
 - CRUD user     com.nikollenko.library.model.Client.java 
                 com.nikollenko.library.services.ClientServiceImpl.java 
